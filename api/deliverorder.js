@@ -10,12 +10,9 @@ module.exports = (req, res) => {
     });
   }
   let db = admin.firestore();
-  req.body.delivered = false;
-  req.body.datetime = admin.firestore.Timestamp.fromDate(new Date());
-
-  let addDoc = db
-    .collection("order")
-    .add(req.body)
+  db.collection("order")
+    .doc(req.body.uuid)
+    .update({ delivered: true })
     .then((ref) => {
       res.status(200).json();
     });
