@@ -1,9 +1,10 @@
 import React from "react";
 
 import axios from "axios";
-import _ from "lodash";
 
 import Order from "./Order.js";
+
+import ReactInterval from "react-interval";
 
 import Grid from "@material-ui/core/Grid";
 import AppBar from "@material-ui/core/AppBar";
@@ -17,26 +18,23 @@ import TextField from "@material-ui/core/TextField";
 class OrderGrid extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { orders: [], lastOrder: null };
+    this.state = { orders: {}, deliveredOrders: {} };
     this.updateAllOrders = this.updateAllOrders.bind(this);
     this.checkForNewOrders = this.checkForNewOrders.bind(this);
+    this.handleDelivery = this.handleDelivery.bind(this);
   }
 
-  updateAllOrders() {
-    let endpoint = "/api/getorders";
-    if (this.props.delivered == true) {
-      endpoint += "?delivered=true";
-    }
+  handleDelivery(id) {
     axios
-      .get(endpoint)
+      .post("/api/deliverorder", { uuid: id })
       .then((res) => {
-        let orders = [];
-        for (const item in res.data) {
-          orders.push(res.data[item]);
-        }
+        let deliveredOrders = this.state.deliveredOrders;
+        let orders = this.state.orders;
+        deliveredOrders[id] = this.state.orders[id];
+        delete orders[id];
         this.setState({
           orders: orders,
-          lastOrder: orders[orders.length - 1],
+          deliveredOrders: deliveredOrders,
         });
       })
       .catch((error) => {
@@ -44,14 +42,50 @@ class OrderGrid extends React.Component {
       });
   }
 
+  updateAllOrders() {
+    axios
+      .get("/api/getorders?missing=1")
+      .then((res) => {
+        let orders = {};
+        for (const item in res.data) {
+          orders[res.data[item].uuid] = res.data[item];
+        }
+        this.setState({
+          orders: orders,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    axios
+      .get("/api/getorders?delivered=1")
+      .then((res) => {
+        let orders = {};
+        for (const item in res.data) {
+          orders[res.data[item].uuid] = res.data[item];
+        }
+        this.setState({
+          deliveredOrders: orders,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  componentWillMount() {
+    this.updateAllOrders();
+  }
+  /*   componentWillReceiveProps(newProps) {
+    if (newProps.delivered !== this.props.delivered) this.updateAllOrders();
+  } */
   checkForNewOrders() {
     let endpoint = "/api/getlastorder";
+    var oldOrders = this.state.orders;
     axios
       .get(endpoint)
       .then((res) => {
-        if (!_.isEqual(res.data[0], this.state.lastOrder)) {
+        if (!(res.data[0].uuid in oldOrders)) {
           this.updateAllOrders();
-          console.log("Checked for new orders");
         }
       })
       .catch((error) => {
@@ -59,10 +93,13 @@ class OrderGrid extends React.Component {
       });
   }
   render() {
-    //this.updateAllOrders();
     this.checkForNewOrders();
+
     let ordersComponents = [];
-    for (const item in this.state.orders) {
+    let orders = {};
+    if (this.props.delivered) orders = this.state.deliveredOrders;
+    else orders = this.state.orders;
+    for (const item in orders) {
       ordersComponents.push(
         <Grid
           item
@@ -74,47 +111,36 @@ class OrderGrid extends React.Component {
           <Order
             key={item}
             index={item}
-            username={this.state.orders[item].username}
-            items={this.state.orders[item].items}
-            notes={this.state.orders[item].notes}
-            tableID={this.state.orders[item].table}
-            time={this.state.orders[item].time}
+            username={orders[item].username}
+            items={orders[item].items}
+            notes={orders[item].notes}
+            uuid={orders[item].uuid}
+            tableID={orders[item].table}
+            time={orders[item].time}
+            handleDelivery={this.handleDelivery}
             {...this.props}
           ></Order>
         </Grid>
       );
     }
     if (ordersComponents.length === 0) {
-      ordersComponents.push(<body>Non sembra esserci niente qui 😔</body>);
+      ordersComponents.push(<body>Carico...</body>);
     }
     return (
-      <Grid container direction="column" justify="center" alignItems="center">
-        <h2 className={this.props.classes.orderCheckTypography}>
-          Note dell'ordine
-        </h2>
-        <body>
-          Ricorda di inserire qui eventuali scelte di cocktail e panini🌯
-        </body>
-        <TextField
-          id="standard-multiline-flexible"
-          label="Inserisci qui le note"
-          multiline
-          rowsMax={10}
-          name="orderNotes"
-          onChange={this.props.handleTextFieldChange}
-          className={this.props.classes.orderNotesTextbox}
+      <Grid
+        container
+        direction="column"
+        justify="flex-start"
+        alignItems="center"
+      >
+        {ordersComponents}
+        <ReactInterval
+          timeout={1000}
+          enabled={true}
+          callback={() => {
+            this.checkForNewOrders();
+          }}
         />
-        <h2 className={this.props.classes.orderCheckTypography}>
-          Contenuto dell'ordine
-        </h2>
-        <Grid
-          container
-          direction="column"
-          justify="flex-start"
-          alignItems="center"
-        >
-          {ordersComponents}
-        </Grid>
       </Grid>
     );
   }

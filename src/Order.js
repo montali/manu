@@ -8,7 +8,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
-import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
+import SentimentVerySatisfiedIcon from "@material-ui/icons/SentimentVerySatisfied";
 
 class Order extends React.Component {
   constructor(props) {
@@ -39,6 +39,8 @@ class Order extends React.Component {
             Tavolo {this.props.tableID} - {this.props.username}
           </h2>
           Ordine inoltrato alle {this.props.time}
+          <br />
+          Note:{this.props.notes}
         </div>
         {itemsData.map((data) => {
           return (
@@ -47,6 +49,7 @@ class Order extends React.Component {
             </li>
           );
         })}
+
         <Grid
           container
           direction="row"
@@ -61,8 +64,8 @@ class Order extends React.Component {
             variant="contained"
             color="secondary"
             className={this.props.classes.button}
-            startIcon={<RemoveShoppingCartIcon />}
-            onClick={() => this.props.handleCartRemove(this.props.index)}
+            startIcon={<SentimentVerySatisfiedIcon />}
+            onClick={() => this.props.handleDelivery(this.props.uuid)}
           >
             CONSEGNA
           </Button>
