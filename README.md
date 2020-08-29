@@ -9,5 +9,5 @@ You can find the customers' section [here](https://github.com/montali/quickbiret
 
 ## TODO
 
-[ ] Add login verification with password
-[ ] Finish this README
+- [ ] Add login verification with password
+- [ ] Finish this README
