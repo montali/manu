@@ -11,9 +11,9 @@
     "axios": "^0.19.2",
     "firebase": "^7.19.0",
     "firebase-admin": "^9.1.1",
-    "lodash": "^4.17.20",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-interval": "^2.1.1",
     "react-scripts": "3.4.3"
   },
   "scripts": {
