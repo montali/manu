@@ -10,7 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import Container from "@material-ui/core/Container";
 import RemoveShoppingCartIcon from "@material-ui/icons/RemoveShoppingCart";
 
-class Order extends React.Component {
+class Table extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -62,4 +62,4 @@ class Order extends React.Component {
   }
 }
 
-export default Order;
+export default Table;
