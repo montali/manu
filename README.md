@@ -10,4 +10,7 @@ You can find the customers' section [here](https://github.com/montali/quickbiret
 ## TODO
 
 - [ ] Add login verification with password
+- [ ] Integrate menu editing dialog
+- [ ] Create CRUD menu items APIs
+- [ ] Integrate CRUD APIs in menu management
 - [ ] Finish this README

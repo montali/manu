@@ -4,6 +4,9 @@ import axios from "axios";
 
 import OrderGrid from "./OrderGrid.js";
 import TableGrid from "./TableGrid.js";
+import TablesDialog from "./TablesDialog.js";
+import MenuGrid from "./MenuGrid.js";
+import MenuDialog from "./MenuDialog.js";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AppBar from "@material-ui/core/AppBar";
@@ -20,7 +23,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import RefreshIcon from "@material-ui/icons/Refresh";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import List from "@material-ui/core/List";
@@ -37,17 +40,48 @@ import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 class MainView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { delivered: false, view: "orders", tablesNo: 0, tables: [] };
+    this.state = {
+      delivered: false,
+      view: "orders",
+      tablesNo: 0,
+      tables: [],
+      menu: [],
+    };
     this.handleChange = this.handleChange.bind(this);
     this.changeView = this.changeView.bind(this);
     this.getTables = this.getTables.bind(this);
+    this.updateMenu = this.updateMenu.bind(this);
+
     this.handleTablesRefresh = this.handleTablesRefresh.bind(this);
     this.handleTextFieldChange = this.handleTextFieldChange.bind(this);
     this.getTables();
+    this.updateMenu();
   }
 
   handleChange() {
     this.setState({ delivered: !this.state.delivered });
+  }
+  updateMenu() {
+    axios
+      .get("/api/getmenu")
+      .then((res) => {
+        let menuDict = {};
+        for (const item in res.data) {
+          menuDict[res.data[item].id] = res.data[item];
+        }
+        this.setState({ menu: menuDict });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  deleteMenuItem(id) {
+    console.log("delete" + id);
+  }
+
+  updateMenuItem(item) {
+    console.log(item);
   }
 
   handleTextFieldChange(event) {
@@ -142,6 +176,7 @@ class MainView extends React.Component {
             )}
           </Toolbar>
         </AppBar>
+
         <Drawer
           className={this.props.classes.drawer}
           variant="persistent"
@@ -183,49 +218,51 @@ class MainView extends React.Component {
             </ListItemIcon>
             <ListItemText primary={"Tavoli"} />
           </MenuItem>
+          <MenuItem
+            button
+            key={"Menù"}
+            selected={this.state.view === "menu"}
+            onClick={() => {
+              this.changeView("menu");
+            }}
+          >
+            <ListItemIcon>
+              <MenuBookIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Menù"} />
+          </MenuItem>
         </Drawer>
-        <Dialog
-          open={this.props.dialogOpen}
-          onClose={this.props.handleDialogClose}
-          aria-labelledby="form-dialog-title"
-        >
-          <DialogTitle id="form-dialog-title">
-            RINFRESCAZZIONAMENTO DEI TAVOLI
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Stai per resettare tutti i tavoli. In questo modo, i
-              malintenzionati non possono farti scherzetti. Smart move, bravo.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="tablesNo"
-              name="tablesNo"
-              label="Inserisci il numero di tavoli"
-              type="number"
-              fullWidth
-              onChange={this.handleTextFieldChange}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.props.handleDialogClose} color="primary">
-              Annulla
-            </Button>
-            <Button onClick={this.handleTablesRefresh} color="primary">
-              Conferma
-            </Button>
-          </DialogActions>
-        </Dialog>
+
         {this.state.view == "orders" && (
-          <OrderGrid delivered={this.state.delivered} {...this.props} />
-        )}
-        {this.state.view == "tables" && (
-          <TableGrid
-            tablesNo={this.state.tablesNo}
-            tables={this.state.tables}
+          <OrderGrid
+            delivered={this.state.delivered}
+            menu={this.state.menu}
             {...this.props}
           />
+        )}
+        {this.state.view == "tables" && (
+          <div>
+            <TablesDialog
+              handleTextFieldChange={this.handleTextFieldChange}
+              handleTablesRefresh={this.handleTablesRefresh}
+              {...this.props}
+            />
+            <TableGrid
+              tablesNo={this.state.tablesNo}
+              tables={this.state.tables}
+              {...this.props}
+            />
+          </div>
+        )}
+        {this.state.view == "menu" && (
+          <div>
+            <MenuDialog
+              handleTextFieldChange={this.handleTextFieldChange}
+              handleTablesRefresh={this.handleTablesRefresh}
+              {...this.props}
+            />
+            <MenuGrid menu={this.state.menu} {...this.props} />
+          </div>
         )}
       </div>
     );
