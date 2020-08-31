@@ -31,13 +31,7 @@ class MenuGrid extends React.Component {
           width={1}
           className={this.props.classes.fullWidthGridItem}
         >
-          <MenuItem
-            name={this.props.menu[item].name}
-            desc={this.props.menu[item].desc}
-            price={this.props.menu[item].price}
-            id={this.props.menu[item].id}
-            {...this.props}
-          ></MenuItem>
+          <MenuItem item={this.props.menu[item]} {...this.props}></MenuItem>
         </Grid>
       );
     }

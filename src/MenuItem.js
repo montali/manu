@@ -20,11 +20,11 @@ class MenuItem extends React.Component {
       <Paper>
         <div style={{ margin: "10px" }}>
           <h2 style={{ marginBottom: "10px", marginTop: "10px" }}>
-            {this.props.name}
+            {this.props.item.name}
           </h2>
-          {this.props.desc}
+          {this.props.item.desc}
           <br />
-          <h5>€{this.props.price.toFixed(2)}</h5>
+          <h5>€{this.props.item.price.toFixed(2)}</h5>
         </div>
 
         <Grid
@@ -39,7 +39,7 @@ class MenuItem extends React.Component {
             color="secondary"
             className={this.props.classes.button}
             startIcon={<SentimentVerySatisfiedIcon />}
-            onClick={() => this.props.handleDelivery(this.props.uuid)}
+            onClick={() => this.props.deleteMenuItem(this.props.item.id)}
             style={{ marginBottom: "10px" }}
           >
             ELIMINA
@@ -49,7 +49,7 @@ class MenuItem extends React.Component {
             color="secondary"
             className={this.props.classes.button}
             startIcon={<SentimentVerySatisfiedIcon />}
-            onClick={() => this.props.handleDelivery(this.props.uuid)}
+            onClick={() => this.props.openEditDialog(this.props.item)}
             style={{ marginBottom: "10px" }}
           >
             MODIFICA

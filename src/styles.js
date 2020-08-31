@@ -109,7 +109,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   loginPaper: {
-    width: "80%",
+    width: "20%",
     height: "40%",
     margin: "auto",
   },
@@ -125,8 +125,14 @@ const useStyles = makeStyles((theme) => ({
   },
   loginDiv: {
     width: "100vw",
-    height: "100vh",
+    height: "90vh",
     background: "#BD0E35",
+  },
+  copyrightDiv: {
+    width: "100vw",
+    height: "10vh",
+    background: "#BD0E35",
+    color: "white",
   },
   paper: {
     backgroundColor: theme.palette.text.paper,

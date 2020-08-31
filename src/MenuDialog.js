@@ -40,6 +40,12 @@ class MenuDialog extends React.Component {
   }
 
   render() {
+    if ("item" in this.props) {
+      this.item = this.props.item;
+    } else {
+      this.item = { name: "", desc: "", price: 0 };
+    }
+
     return (
       <Dialog
         open={this.props.dialogOpen}
@@ -55,21 +61,23 @@ class MenuDialog extends React.Component {
             autoFocus
             margin="dense"
             id="itemName"
-            name="itemName"
+            name="name"
             label="Inserisci il nome"
             type="text"
             fullWidth
-            onChange={this.props.handleTextFieldChange}
+            defaultValue={this.props.item.name}
+            onChange={this.props.handleMenuItemTextFieldChange}
           />
           <TextField
             autoFocus
             margin="dense"
             id="itemDesc"
-            name="itemDesc"
+            name="desc"
             label="Inserisci la descrizione"
             type="text"
+            defaultValue={this.props.item.desc}
             fullWidth
-            onChange={this.props.handleTextFieldChange}
+            onChange={this.props.handleMenuItemTextFieldChange}
           />
           <TextField
             autoFocus
@@ -81,17 +89,18 @@ class MenuDialog extends React.Component {
             }}
             id="price"
             name="price"
+            defaultValue={this.props.item.price}
             label="Inserisci il prezzo"
             type="number"
             fullWidth
-            onChange={this.props.handleTextFieldChange}
+            onChange={this.props.handleMenuItemTextFieldChange}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.handleDialogClose} color="primary">
             Annulla
           </Button>
-          <Button onClick={this.props.handleMenuEdit} color="primary">
+          <Button onClick={this.props.updateMenuItem} color="primary">
             Conferma
           </Button>
         </DialogActions>
