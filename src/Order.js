@@ -20,9 +20,9 @@ class Order extends React.Component {
     let itemsData = [];
     let totalPrice = 0.0;
 
-    for (const item in this.props.items) {
-      if (this.props.items[item] in this.props.menu) {
-        let menuItem = this.props.menu[this.props.items[item]];
+    for (const item in this.props.order.items) {
+      if (this.props.order.items[item] in this.props.menu) {
+        let menuItem = this.props.menu[this.props.order.items[item]];
 
         itemsData.push({
           key: item,
@@ -36,11 +36,11 @@ class Order extends React.Component {
       <Paper>
         <div style={{ margin: "10px" }}>
           <h2 style={{ marginBottom: "10px", marginTop: "10px" }}>
-            Tavolo {this.props.tableID} - {this.props.username}
+            Tavolo {this.props.order.tableID} - {this.props.order.username}
           </h2>
-          Ordine inoltrato alle {this.props.time}
+          Ordine inoltrato alle {this.props.order.time}
           <br />
-          Note:{this.props.notes}
+          Note:{this.props.order.notes}
         </div>
         {itemsData.map((data) => {
           return (
@@ -60,15 +60,17 @@ class Order extends React.Component {
           <h2 style={{ marginBottom: "10px", marginTop: "10px" }}>
             €{totalPrice.toFixed(2)}
           </h2>
-          <Button
-            variant="contained"
-            color="secondary"
-            className={this.props.classes.button}
-            startIcon={<SentimentVerySatisfiedIcon />}
-            onClick={() => this.props.handleDelivery(this.props.uuid)}
-          >
-            CONSEGNA
-          </Button>
+          {!this.props.order.delivered && (
+            <Button
+              variant="contained"
+              color="secondary"
+              className={this.props.classes.button}
+              startIcon={<SentimentVerySatisfiedIcon />}
+              onClick={() => this.props.handleDelivery(this.props.uuid)}
+            >
+              CONSEGNA
+            </Button>
+          )}
         </Grid>
       </Paper>
     );

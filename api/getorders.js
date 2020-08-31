@@ -40,7 +40,8 @@ module.exports = (req, res) => {
       snapshot.forEach((doc) => {
         var time = doc.data().datetime;
         var date = time.toDate();
-        var stringTime = date.getHours() + ":" + date.getMinutes();
+        var stringTime =
+          date.getHours() + ":" + String("0" + date.getMinutes()).slice(-2);
         const data = doc.data();
         data.time = stringTime;
         response.push(data);

@@ -111,12 +111,7 @@ class OrderGrid extends React.Component {
           <Order
             key={item}
             index={item}
-            username={orders[item].username}
-            items={orders[item].items}
-            notes={orders[item].notes}
-            uuid={orders[item].uuid}
-            tableID={orders[item].table}
-            time={orders[item].time}
+            order={orders[item]}
             handleDelivery={this.handleDelivery}
             {...this.props}
           ></Order>
