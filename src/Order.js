@@ -36,7 +36,7 @@ class Order extends React.Component {
       <Paper>
         <div style={{ margin: "10px" }}>
           <h2 style={{ marginBottom: "10px", marginTop: "10px" }}>
-            Tavolo {this.props.order.tableID} - {this.props.order.username}
+            Tavolo {this.props.order.table} - {this.props.order.username}
           </h2>
           Ordine inoltrato alle {this.props.order.time}
           <br />
