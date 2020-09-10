@@ -66,7 +66,7 @@ class Order extends React.Component {
               color="secondary"
               className={this.props.classes.button}
               startIcon={<SentimentVerySatisfiedIcon />}
-              onClick={() => this.props.handleDelivery(this.props.uuid)}
+              onClick={() => this.props.handleDelivery(this.props.order.uuid)}
             >
               CONSEGNA
             </Button>
