@@ -24,7 +24,7 @@ class MenuItem extends React.Component {
           </h2>
           {this.props.item.desc}
           <br />
-          <h5>€{this.props.item.price.toFixed(2)}</h5>
+          <h5>€{this.props.item.price}</h5>
         </div>
 
         <Grid
