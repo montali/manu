@@ -130,7 +130,7 @@ class OrderGrid extends React.Component {
       >
         {ordersComponents}
         <ReactInterval
-          timeout={1000}
+          timeout={3000}
           enabled={true}
           callback={() => {
             this.checkForNewOrders();
